@@ -1,4 +1,6 @@
 # Programa que calcula o fatorial de um numero dado
+# Mateus Ferreira Gomes	09/03/2019
+# ICMC - USP
 
 .data
 
@@ -18,8 +20,8 @@
 	move $t0, $v0		#Move o numero lido (ate onde fazer o fatorial) para o registrador $t0
 	addi $t0, $t0, 1		#Soma 1 para realizar a multiplicacao ate o numero correto
 	
-	li $t2, 1			#Guarda "1" no registrador que contar· para fazer a multiplicacao  ("contador")
-	li $t1, 1			#Guarda "1" no registrador que guardar· o resultado das multiplicacoes
+	li $t2, 1			#Guarda "1" no registrador que contar√° para fazer a multiplicacao  ("contador")
+	li $t1, 1			#Guarda "1" no registrador que guardar√° o resultado das multiplicacoes
 	
 	loop:
 
