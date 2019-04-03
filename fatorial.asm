@@ -10,31 +10,45 @@
 .text
 	
 	
-	li $v0, 4			#Carrega a funcao de printar uma string
-	la $a0, quanto		#Posiciona no registrador
-	syscall			#Printa
+	li $v0, 4			# Carrega a funcao de printar uma string
+	la $a0, quanto		# Posiciona no registrador
+	syscall			# Printa
 	
-	li $v0, 5			#Carrega a funcao de ler um int
-	syscall			#Le o int
+	li $v0, 5			# Carrega a funcao de ler um int
+	syscall			# Le o int
 	
-	move $t0, $v0		#Move o numero lido (ate onde fazer o fatorial) para o registrador $t0
-	addi $t0, $t0, 1		#Soma 1 para realizar a multiplicacao ate o numero correto
+	move $a0, $v0		# Move o numero lido (ate onde fazer o fatorial) para o registrador $t0
+	jal fatorial	# Chama o fatorial, colocando o $ra na proxima instrucao
 	
-	li $t2, 1			#Guarda "1" no registrador que contará para fazer a multiplicacao  ("contador")
-	li $t1, 1			#Guarda "1" no registrador que guardará o resultado das multiplicacoes
+	move $t1, $v0	# Colocando o resultado do fatorial em $t1 para printar
 	
-	loop:
+	li $v0, 1		# Carrega a funcao de printar o numero resultado do fatorial
+	move $a0, $t1	# Coloca o resultado em $a0
+	syscall		# Printa o resultado
+		
+	li $v0, 10
+	syscall	# Finaliza o programa
+	
+	fatorial:
+		
+		addi $sp, $sp, -8 # Alocando espaco na pilha para armazenar o numero digitado
+		sw $a0, 4($sp)    # e o conteudo de $ra para quando finalizar a funcao
+		sw $ra, 0($sp)    # a0 esta' 4 posicoes distantes de $sp e $ra a 0
+		addi $v0, $zero, 1	# Armazenando 1 em v0 para realizar o calculo de multiplicacao
+		
+		
+		loop:
 
-		mul $t1, $t1, $t2		# $t1 = $t1*$t2
-		addi $t2, $t2, 1		# $t2++
-		beq $t2, $t0, fim_loop	#enquanto $t2 nao chegar no fatorial desejado (salvo em $t0)
-		j loop				
+			mul $v0, $v0, $a0		# $v0 = $v0*$a0
+			addi $a0, $a0, -1		# $a0--
+			beq $a0, $zero, fim_loop	# Enquanto $a0 nao chegar a zero
+			j loop				# realiza o loop
 	
-	fim_loop:
-		
-		li $v0, 1		#carrega a funcao de printar o numero resultado do fatorial
-		move $a0, $t1	#coloca o resultado em $a0
-		syscall		#printa o resultado
-		
-		li $v0, 10
-		syscall	#finaliza o programa
+		fim_loop:
+			
+			lw $a0, 4($sp)			# Carregando de volta os valores nos
+			lw $ra, 0($sp)			# registradores para retornar a posicao
+			addi $sp, $sp, 8		# salva em $ra
+			jr $ra
+			
+			
